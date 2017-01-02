@@ -9,13 +9,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import java.awt.*;
 import java.util.Iterator;
 
 public class Drop extends ApplicationAdapter {
@@ -101,7 +100,7 @@ public class Drop extends ApplicationAdapter {
             Rectangle raindrop = iter.next();
             raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
             if (raindrop.y + 64 < 0) iter.remove();
-            if(raindrop.intersects(bucket)) {
+            if(raindrop.overlaps(bucket)) {
                 dropSound.play();
                 iter.remove();
             }
