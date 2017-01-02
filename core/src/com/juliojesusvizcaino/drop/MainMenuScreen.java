@@ -6,11 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class MainMenuScreen implements Screen{
-    final Drop2 game;
+    final Drop game;
 
     OrthographicCamera camera;
 
-    public MainMenuScreen(final Drop2 game) {
+    public MainMenuScreen(final Drop game) {
         this.game = game;
 
         camera = new OrthographicCamera();
@@ -34,5 +34,34 @@ public class MainMenuScreen implements Screen{
             game.setScreen(new GameScreen(game));
             dispose();
         }
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
     }
 }
