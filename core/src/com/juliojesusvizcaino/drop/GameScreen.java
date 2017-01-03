@@ -78,9 +78,9 @@ public class GameScreen implements Screen {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            bucketSprite.setX(bucketSprite.getX() - 200 * Gdx.graphics.getDeltaTime());
+            bucketSprite.setX(bucketSprite.getX() - 200 * delta);
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            bucketSprite.setX(bucketSprite.getX() + 200 * Gdx.graphics.getDeltaTime());
+            bucketSprite.setX(bucketSprite.getX() + 200 * delta);
 
 		if(bucketSprite.getX() < 0) bucketSprite.setX(0);
 		if(bucketSprite.getX() > 800-64) bucketSprite.setX(800-64);
@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
         Iterator<Sprite> iter = raindrops.iterator();
         while(iter.hasNext()) {
             Sprite raindrop = iter.next();
-            raindrop.setY(raindrop.getY() - 200 * Gdx.graphics.getDeltaTime());
+            raindrop.setY(raindrop.getY() - 200 * delta);
             if (raindrop.getY() + 64 < 0) iter.remove();
             if(raindrop.getBoundingRectangle().overlaps(bucketSprite.getBoundingRectangle())) {
                 dropSound.play();
