@@ -1,6 +1,5 @@
 package com.juliojesusvizcaino.drop;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -47,11 +46,11 @@ public class GameScreen implements Screen {
 
 	public GameScreen(final Drop gam) {
     	this.game = gam;
-		dropImage = new Texture(Gdx.files.internal("droplet.png"));
-		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
+		dropImage = new Texture(Gdx.files.internal("images/droplet.png"));
+		bucketImage = new Texture(Gdx.files.internal("images/bucket.png"));
 
-		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
+		dropSound = Gdx.audio.newSound(Gdx.files.internal("audios/drop.wav"));
+		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/rain.mp3"));
 		rainMusic.setLooping(true);
 
 		camera = new OrthographicCamera();
