@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -25,14 +26,14 @@ public class GameScreen implements Screen {
 	private Sound dropSound;
 	private Music rainMusic;
 
-	private Rectangle bucket;
-
 	private OrthographicCamera camera;
 
     private Vector3 touchPos = new Vector3();
     private Array<Rectangle> raindrops;
     private long lastDropTime;
     private int dropsGathered;
+    private TextureAtlas atlas;
+    private Sprite dropSprite, bucketSprite;
 
     private void spawnRaindrop() {
         Rectangle raindrop = new Rectangle();
@@ -46,8 +47,12 @@ public class GameScreen implements Screen {
 
 	public GameScreen(final Drop gam) {
     	this.game = gam;
+    	atlas = new TextureAtlas(Gdx.files.internal("pack/game.atlas"));
 		dropImage = new Texture(Gdx.files.internal("images/droplet.png"));
-		bucketImage = new Texture(Gdx.files.internal("images/bucket.png"));
+		dropSprite = atlas.createSprite("droplet");
+		bucketSprite = atlas.createSprite("bucket");
+
+		bucketSprite.setPosition(800/2 - 64/2, 20);
 
 		dropSound = Gdx.audio.newSound(Gdx.files.internal("audios/drop.wav"));
 		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/rain.mp3"));
@@ -55,12 +60,6 @@ public class GameScreen implements Screen {
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
-
-		bucket = new Rectangle();
-		bucket.x = 800/2 - 64/2;
-		bucket.y = 20;
-		bucket.width = 64;
-		bucket.height = 64;
 
 		raindrops = new Array<Rectangle>();
 		spawnRaindrop();
@@ -74,7 +73,7 @@ public class GameScreen implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		game.font.draw(game.batch, "Drops Collected: " + dropsGathered, 0, 480);
-		game.batch.draw(bucketImage, bucket.x, bucket.y);
+		bucketSprite.draw(game.batch);
 		for(Rectangle raindrop: raindrops) {
             game.batch.draw(dropImage, raindrop.x, raindrop.y);
         }
@@ -83,14 +82,16 @@ public class GameScreen implements Screen {
 		if(Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
-            bucket.x = (int) touchPos.x - 64/2;
+            bucketSprite.setX(touchPos.x - 64/2);
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) bucket.x -= 200 * Gdx.graphics.getDeltaTime();
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) bucket.x += 200 * Gdx.graphics.getDeltaTime();
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            bucketSprite.setX(bucketSprite.getX() - 200 * Gdx.graphics.getDeltaTime());
+		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            bucketSprite.setX(bucketSprite.getX() + 200 * Gdx.graphics.getDeltaTime());
 
-		if(bucket.x < 0) bucket.x = 0;
-		if(bucket.x > 800-64) bucket.x = 800-64;
+		if(bucketSprite.getX() < 0) bucketSprite.setX(0);
+		if(bucketSprite.getX() > 800-64) bucketSprite.setX(-64);
 
 		if(TimeUtils.nanoTime() - lastDropTime > 1000000000) spawnRaindrop();
 
@@ -99,7 +100,7 @@ public class GameScreen implements Screen {
             Rectangle raindrop = iter.next();
             raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
             if (raindrop.y + 64 < 0) iter.remove();
-            if(raindrop.overlaps(bucket)) {
+            if(raindrop.overlaps(bucketSprite.getBoundingRectangle())) {
                 dropSound.play();
                 iter.remove();
                 dropsGathered++;
@@ -110,7 +111,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose () {
         dropImage.dispose();
-        bucketImage.dispose();
         dropSound.dispose();
         rainMusic.dispose();
 	}
